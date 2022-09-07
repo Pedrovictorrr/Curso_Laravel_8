@@ -1,9 +1,7 @@
 <?php
-
-use Illuminate\Support\Facades\Route;
-
-use League\CommonMark\Extension\DescriptionList\Parser\DescriptionTermContinueParser;
 use App\Http\Controllers\PostController;
+use GuzzleHttp\Middleware;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +13,17 @@ use App\Http\Controllers\PostController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+Route::middleware(['auth'])->group(function(){
+
 Route::any('/posts/search',[PostController::class,'search'])->name("search.post");
 Route::get('/posts',[PostController::class,'index'])->name("index.post");
 
@@ -27,6 +36,5 @@ Route::delete("/posts/{id}",[PostController::class,'destroy'])->name("destroy.po
 Route::get('/posts/edit/{id}',[PostController::class,'edit'])->name("edit.post");
 Route::get('/posts/{id}',[PostController::class,'show'])->name('show.post');
 
-Route::get('/', function () {
-    return view('welcome');
 });
+require __DIR__.'/auth.php';
